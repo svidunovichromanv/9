@@ -1,0 +1,166 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>test</title>
+    <style>
+      body{
+        font-size: 1.2rem;
+        font-family: sans-serif;
+      }
+      label{
+        display: inline-block;
+        width: 11.5rem;
+      }
+      .elform{
+        margin: 15px;
+      }
+      .txt{
+        font-size: 1.2rem;
+        width: 20rem;
+        border:  0px;
+        border-bottom: solid black 1px;
+      }
+      .txt:focus{
+        outline: none;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.19), 0 0.6px 0.6px rgba(0,0,0,0.23);
+      }
+      #btn{
+        margin-left: 6rem;
+        font-size: 1.2rem;
+        border-radius: 3px;
+        background-color: gainsboro;
+        border: solid grey 1px;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.19), 0 0.6px 0.6px rgba(0,0,0,0.23);
+      }
+      #btn:hover{
+        box-shadow: 0px;
+        border: solid grey 2px;
+      }
+      #sel{
+        width: 20rem;
+        font-size: 1rem;
+        background-color: gainsboro;
+        border: solid grey 1px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+  <form action="http://fe.it-academy.by/TestForm.php" name="validme">
+    <div class="elform">
+      <label class="label">Разработчики:</label>
+      <input class="txt" name="developers" type="text">
+    </div>
+    <div class="elform">
+      <label class="label">Название сайта:</label>
+      <input class="txt" name="saitname" type="text">
+    </div>
+    <div class="elform">
+      <label class="label">URL сайта:</label>
+      <input class="txt" name="url" type="url">
+    </div>
+    <div class="elform">
+      <label class="label">Дата запуска сайта:</label>
+      <input class="txt" name="date" type="date">
+    </div>
+    <div class="elform">
+      <label class="label">Посетителей в сутки:</label>
+      <input class="txt" name="visits" type="number">
+    </div>
+    <div class="elform">
+      <label class="label">E-mail для связи:</label>
+      <input class="txt" name="mail" type="email">
+    </div>
+    <div class="elform">
+      <label class="label">Рубрика каталога:</label>
+      <select class="txt" name="catalog" id="sel">
+        <option value="">----</option>
+        <option value="helth">здоровье</option>
+        <option value="home">домашний уют</option>
+        <option value="appliances">бытовая техника</option>
+      </select>
+    </div>
+    <div class="elform">
+      <label class="label">Размещение:</label>      
+      <input name="accommodation" type="radio" value="free"><span>бесплатное</span>
+      <input name="accommodation" type="radio" value="pay"><span>платное</span>
+      <input name="accommodation" type="radio" value="vip"><span>VIP</span>
+    </div>
+    <div class="elform">
+      <label class="label">Разрешить отзывы:</label>
+      <input class="txt" name="review" type="checkbox">
+    </div>
+    <div class="elform">
+      <label class="label">Описание сайта:</label>
+      <textarea class="txt"></textarea>
+    </div>
+      <input id="btn" type="submit">
+    
+    
+    
+  </form>
+    <script>
+    'use strict'
+      const form = document.forms.validme;
+      const dev = form.elements.developers;
+      const checkbox = form.elements.review;
+      const radio = form.elements.accommodation;
+      
+      const eror = document.createElement("div");
+      eror.style.cssText="display: inline-block; font-size: 0.8rem; width: 10rem; border: solid red 1px; background-color: pink;";
+      eror.textContent="Поле должно быть заполнено";
+      
+      dev.focus();
+      const inputs = document.getElementsByClassName("txt");
+      for (let i = 0; i < inputs.length; i++){
+        inputs[i].onblur=checkBlur;
+        inputs[i].checkIt = 0;
+      }
+      function checkBlur(e){
+        if (!e.target.value && e.target.checkIt===0){
+          const div = e.target.parentNode;
+          const neror = eror.cloneNode(true);
+          div.appendChild(neror);
+          e.target.checkIt = 1;
+        }else{ e.target.parentNode.removeChild(e.target.parentNode.getElementsByTagName('div')[0]);
+          e.target.checkIt = 0;
+        } 
+      }
+      
+      
+      form.onsubmit = checkSubmit;
+      function checkSubmit(e){
+        for (let j = inputs.length - 1; j >= 0; j--){
+          if (!inputs[j].value){
+            e.preventDefault();
+            var firstWrongElement = inputs[j];
+          }
+          if (!inputs[j].value && inputs[j].checkIt===0){
+            const div = inputs[j].parentNode;
+            const neror = eror.cloneNode(true);
+            div.appendChild(neror);
+            inputs[j].checkIt = 1;
+          }
+        }
+        if(!checkbox.checked && checkbox.checkIt===0){
+          e.preventDefault();
+          const div = checkbox.parentNode;
+          const neror = eror.cloneNode(false);
+          neror.textContent="Нужно устаноть галочку!";
+          div.appendChild(neror);
+          checkbox.checkIt = 1;
+        }
+        if(!radio.value){
+          e.preventDefault();
+          const div = radio[0].parentNode;
+          const nneror = eror.cloneNode(false);
+          nneror.textContent="Нужно устаноть галочку!";
+          div.appendChild(nneror);
+        }
+        firstWrongElement.focus();
+      }
+      
+    </script>
+  </body>
+</html>
